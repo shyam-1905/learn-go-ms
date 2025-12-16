@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: receipt-service
+  namespace: expense-tracker
+  labels:
+    app: receipt-service
+    service: receipt
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8082
+    targetPort: 8082
+    protocol: TCP
+  selector:
+    app: receipt-service
+

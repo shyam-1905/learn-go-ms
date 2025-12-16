@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: receipt-service-config
+  namespace: expense-tracker
+  labels:
+    app: receipt-service
+data:
+  server-port: "8082"
+  aws-region: "us-east-1"
+  auth-service-url: "http://auth-service.expense-tracker.svc.cluster.local:8080"
+  s3-bucket-name: "<S3_BUCKET_NAME>"
+  receipt-events-topic-arn: "<RECEIPT_EVENTS_TOPIC_ARN>"
+

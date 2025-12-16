@@ -1,0 +1,10 @@
+# Namespace for expense-tracker application
+# All microservices will be deployed in this namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: expense-tracker
+  labels:
+    name: expense-tracker
+    app: expense-tracker
+

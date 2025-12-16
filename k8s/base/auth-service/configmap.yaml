@@ -1,0 +1,22 @@
+# ConfigMap for auth-service
+# Contains non-sensitive configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-service-config
+  namespace: expense-tracker
+  labels:
+    app: auth-service
+data:
+  # Server configuration
+  server-port: "8080"
+  
+  # JWT configuration
+  jwt-expiration-hours: "24"
+  
+  # AWS configuration (non-sensitive)
+  aws-region: "us-east-1"
+  
+  # SNS Topic ARN (will be replaced by Terraform output)
+  auth-events-topic-arn: "<AUTH_EVENTS_TOPIC_ARN>"
+

@@ -1,0 +1,48 @@
+# Example Terraform variables file
+# Copy this to terraform.tfvars and fill in your values
+
+project_name = "expense-tracker"
+environment  = "dev"
+
+# VPC Configuration
+# Option 1: Use VPC name (Terraform will find it by tag)
+vpc_name = "expense-tracker-vpc"
+
+# Option 2: Use VPC ID directly (uncomment and use this instead)
+# vpc_id = "vpc-xxxxxxxxx"
+
+# EKS Security Group Configuration
+# Find these in AWS Console: EKS Cluster -> Networking -> Security Groups
+eks_cluster_security_group_name = "expense-tracker-eks-cluster-sg"
+
+# EKS Node Group Security Groups (optional, if different from cluster SG)
+# Find these in: EC2 -> Security Groups -> Filter by EKS node group
+eks_node_security_group_ids = [
+  # "sg-xxxxxxxxx",  # Node group 1
+  # "sg-yyyyyyyyy",  # Node group 2
+]
+
+# RDS Configuration
+postgres_version = "15.4"        # PostgreSQL version
+instance_class   = "db.t3.micro" # Start small for dev, scale for prod
+allocated_storage = 20           # Initial storage in GB
+max_allocated_storage = 100      # Auto-scaling max storage
+
+# High Availability (set to true for production)
+multi_az = false
+
+# Database Configuration
+initial_database_name = "auth_db"
+master_username       = "postgres"
+app_username          = "app_user"
+
+# Backup Configuration
+backup_retention_days = 7        # Keep backups for 7 days
+backup_window         = "03:00-04:00"  # UTC time
+maintenance_window    = "mon:04:00-mon:05:00"  # Monday 4-5 AM UTC
+
+# Security
+deletion_protection = true       # Prevent accidental deletion
+
+# Performance Insights (costs extra, enable for production)
+performance_insights_enabled = false

@@ -1,0 +1,130 @@
+# Deployment for receipt-service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: receipt-service
+  namespace: expense-tracker
+  labels:
+    app: receipt-service
+    service: receipt
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: receipt-service
+  template:
+    metadata:
+      labels:
+        app: receipt-service
+        service: receipt
+    spec:
+      serviceAccountName: receipt-service
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: receipt-service
+        image: <IMAGE_TAG>
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8082
+          protocol: TCP
+        env:
+        # Database configuration
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: receipt-service-secrets
+              key: db-host
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: receipt-service-secrets
+              key: db-port
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: receipt-service-secrets
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: receipt-service-secrets
+              key: db-password
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: receipt-service-secrets
+              key: db-name
+        
+        # Auth service URL
+        - name: AUTH_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: receipt-service-config
+              key: auth-service-url
+        
+        # AWS S3 configuration
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: receipt-service-config
+              key: aws-region
+        - name: S3_BUCKET_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: receipt-service-config
+              key: s3-bucket-name
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: receipt-service-secrets
+              key: aws-access-key-id
+              optional: true
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: receipt-service-secrets
+              key: aws-secret-access-key
+              optional: true
+        
+        # SNS configuration
+        - name: RECEIPT_EVENTS_TOPIC_ARN
+          valueFrom:
+            configMapKeyRef:
+              name: receipt-service-config
+              key: receipt-events-topic-arn
+        
+        # Server configuration
+        - name: SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: receipt-service-config
+              key: server-port
+        
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8082
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8082
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+

@@ -1,0 +1,47 @@
+# Example Terraform Variables File
+# Copy this to terraform.tfvars and fill in your values
+# terraform.tfvars is gitignored (contains sensitive values)
+
+# Project Configuration
+project_name = "expense-tracker"
+environment  = "production"
+aws_region   = "us-east-1"
+
+# Networking
+vpc_cidr             = "10.0.0.0/16"
+public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+private_subnet_cidrs = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
+enable_nat_gateway   = true  # Set to false for cost savings in dev
+
+# EKS Configuration
+kubernetes_version              = "1.28"
+node_instance_types             = ["t3.medium"]
+node_capacity_type              = "ON_DEMAND"  # or "SPOT" for cost savings
+node_desired_size               = 2
+node_min_size                   = 1
+node_max_size                   = 4
+node_disk_size                  = 20
+ssh_key_name                    = null  # Optional: your EC2 key pair name
+cluster_endpoint_public_access_cidrs = []  # Empty = allow all, or specify CIDR blocks
+log_retention_days              = 7
+
+# RDS Configuration
+db_instance_class     = "db.t3.micro"  # Start small, scale up later
+postgres_version      = "15.4"
+allocated_storage     = 20
+max_allocated_storage = 100
+backup_retention_days = 7
+enable_multi_az       = false  # Set to true for production HA (costs 2x)
+deletion_protection   = true   # Protect against accidental deletion
+
+# ArgoCD Configuration
+git_repo_url   = "https://github.com/your-username/learn-go-ms.git"  # REQUIRED: Your Git repo
+git_branch     = "main"
+kustomize_path = "k8s/overlays/production"
+
+# Kubernetes Configuration
+k8s_namespace = "expense-tracker"
+
+# Optional Features
+enable_external_secrets = false  # Set to true if using External Secrets Operator
+

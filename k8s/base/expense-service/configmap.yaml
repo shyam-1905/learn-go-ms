@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: expense-service-config
+  namespace: expense-tracker
+  labels:
+    app: expense-service
+data:
+  server-port: "8081"
+  aws-region: "us-east-1"
+  # Auth service URL using Kubernetes Service DNS
+  auth-service-url: "http://auth-service.expense-tracker.svc.cluster.local:8080"
+  # SNS Topic ARN (will be replaced by Terraform output)
+  expense-events-topic-arn: "<EXPENSE_EVENTS_TOPIC_ARN>"
+

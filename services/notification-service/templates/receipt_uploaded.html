@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Receipt Uploaded</title>
+	<style>
+		body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+		.container { max-width: 600px; margin: 0 auto; padding: 20px; }
+		.header { background-color: #FF9800; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+		.content { padding: 20px; background-color: #f9f9f9; border: 1px solid #ddd; }
+		.receipt-details { background-color: white; padding: 15px; margin: 15px 0; border-left: 4px solid #FF9800; }
+		.detail-row { margin: 10px 0; }
+		.detail-label { font-weight: bold; color: #555; }
+		.footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<h1>Receipt Uploaded</h1>
+		</div>
+		<div class="content">
+			<p>Hello,</p>
+			<p>You've successfully uploaded a new receipt.</p>
+			
+			<div class="receipt-details">
+				<div class="detail-row">
+					<span class="detail-label">File Name:</span> {{.FileName}}
+				</div>
+				<div class="detail-row">
+					<span class="detail-label">File Size:</span> {{.FileSize}} bytes
+				</div>
+				<div class="detail-row">
+					<span class="detail-label">Type:</span> {{.MimeType}}
+				</div>
+				{{if .ExpenseID}}
+				<div class="detail-row">
+					<span class="detail-label">Linked to Expense:</span> {{.ExpenseID}}
+				</div>
+				{{end}}
+			</div>
+			
+			<p>Your receipt is now stored securely and can be linked to expenses.</p>
+		</div>
+		<div class="footer">
+			<p>This is an automated notification from Expense Tracker.</p>
+		</div>
+	</div>
+</body>
+</html>

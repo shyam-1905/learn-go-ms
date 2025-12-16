@@ -1,0 +1,24 @@
+# Kustomization file for auth-service
+# This file tells Kustomize which resources to include
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: expense-tracker
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - serviceaccount.yaml
+  - configmap.yaml
+
+# Common labels applied to all resources
+commonLabels:
+  app: auth-service
+  service: auth
+
+# Image configuration - will be overridden in overlays
+images:
+  - name: <IMAGE_TAG>
+    newName: <IMAGE_REPOSITORY>
+    newTag: <IMAGE_TAG>
+

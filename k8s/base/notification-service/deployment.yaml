@@ -1,0 +1,108 @@
+# Deployment for notification-service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: expense-tracker
+  labels:
+    app: notification-service
+    service: notification
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+        service: notification
+    spec:
+      serviceAccountName: notification-service
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: notification-service
+        image: <IMAGE_TAG>
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8083
+          protocol: TCP
+        env:
+        # AWS configuration
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: notification-service-config
+              key: aws-region
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: notification-service-secrets
+              key: aws-access-key-id
+              optional: true
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: notification-service-secrets
+              key: aws-secret-access-key
+              optional: true
+        
+        # SQS Queue URLs
+        - name: EXPENSE_EVENTS_QUEUE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: notification-service-config
+              key: expense-events-queue-url
+        - name: RECEIPT_EVENTS_QUEUE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: notification-service-config
+              key: receipt-events-queue-url
+        - name: AUTH_EVENTS_QUEUE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: notification-service-config
+              key: auth-events-queue-url
+        
+        # SNS Topic ARN
+        - name: NOTIFICATION_EMAIL_TOPIC_ARN
+          valueFrom:
+            configMapKeyRef:
+              name: notification-service-config
+              key: notification-email-topic-arn
+        
+        # Server configuration
+        - name: SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: notification-service-config
+              key: server-port
+        
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8083
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8083
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+

@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: expense-tracker
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - serviceaccount.yaml
+  - configmap.yaml
+
+commonLabels:
+  app: receipt-service
+  service: receipt
+
+images:
+  - name: <IMAGE_TAG>
+    newName: <IMAGE_REPOSITORY>
+    newTag: <IMAGE_TAG>
+

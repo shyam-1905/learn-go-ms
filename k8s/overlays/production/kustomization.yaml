@@ -1,0 +1,71 @@
+# Production overlay Kustomization
+# This overlays the base configuration with production-specific settings
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: expense-tracker
+
+# Include base resources
+resources:
+  - ../../base
+  - ingress.yaml
+
+# Common annotations for all resources
+commonAnnotations:
+  environment: production
+  managed-by: argocd
+
+# Image overrides for production
+# These will be set by ArgoCD or CI/CD pipeline
+images:
+  - name: <IMAGE_TAG>
+    newName: <IMAGE_REPOSITORY>
+    newTag: <IMAGE_TAG>
+
+# Replicas override for production (higher availability)
+replicas:
+  - name: auth-service
+    count: 3
+  - name: expense-service
+    count: 3
+  - name: receipt-service
+    count: 3
+  - name: notification-service
+    count: 2
+
+# ConfigMap patches for production values
+# These will be populated from Terraform outputs
+patchesStrategicMerge:
+  - |-
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: auth-service-config
+    data:
+      auth-events-topic-arn: <AUTH_EVENTS_TOPIC_ARN>
+  - |-
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: expense-service-config
+    data:
+      expense-events-topic-arn: <EXPENSE_EVENTS_TOPIC_ARN>
+  - |-
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: receipt-service-config
+    data:
+      s3-bucket-name: <S3_BUCKET_NAME>
+      receipt-events-topic-arn: <RECEIPT_EVENTS_TOPIC_ARN>
+  - |-
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: notification-service-config
+    data:
+      expense-events-queue-url: <EXPENSE_EVENTS_QUEUE_URL>
+      receipt-events-queue-url: <RECEIPT_EVENTS_QUEUE_URL>
+      auth-events-queue-url: <AUTH_EVENTS_QUEUE_URL>
+      notification-email-topic-arn: <NOTIFICATION_EMAIL_TOPIC_ARN>
+

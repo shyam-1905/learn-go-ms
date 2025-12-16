@@ -1,0 +1,66 @@
+# Ingress for production environment
+# Uses AWS ALB Ingress Controller for external access
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: expense-tracker-ingress
+  namespace: expense-tracker
+  labels:
+    app: expense-tracker
+  annotations:
+    # AWS ALB Ingress Controller annotations
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    
+    # Health check configuration
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '3'
+    
+    # SSL/TLS configuration (uncomment and configure when you have a certificate)
+    # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERT_ID
+    # alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-2017-01
+    
+    # Load balancer attributes
+    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=60
+    
+    # Tags for cost tracking
+    alb.ingress.kubernetes.io/tags: Environment=production,Application=expense-tracker
+spec:
+  # Ingress rules for path-based routing
+  rules:
+  - host: ""  # Empty host matches all hosts
+    http:
+      paths:
+      # Auth service routes
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8080
+      # Expense service routes
+      - path: /expenses
+        pathType: Prefix
+        backend:
+          service:
+            name: expense-service
+            port:
+              number: 8081
+      # Receipt service routes
+      - path: /receipts
+        pathType: Prefix
+        backend:
+          service:
+            name: receipt-service
+            port:
+              number: 8082
+  
+  # Note: notification-service is internal only, no ingress needed
+

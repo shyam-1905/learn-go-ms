@@ -1,0 +1,14 @@
+# Root Kustomization file for base resources
+# This includes all services and the namespace
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: expense-tracker
+
+resources:
+  - namespace.yaml
+  - auth-service
+  - expense-service
+  - receipt-service
+  - notification-service
+

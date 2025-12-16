@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Welcome to Expense Tracker</title>
+	<style>
+		body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+		.container { max-width: 600px; margin: 0 auto; padding: 20px; }
+		.header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 5px 5px 0 0; }
+		.content { padding: 30px; background-color: #f9f9f9; border: 1px solid #ddd; }
+		.welcome-message { background-color: white; padding: 20px; margin: 20px 0; border-left: 4px solid #667eea; }
+		.features { margin: 20px 0; }
+		.feature-item { padding: 10px; margin: 5px 0; background-color: #f0f0f0; border-radius: 3px; }
+		.footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+		.button { display: inline-block; padding: 12px 24px; background-color: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 10px 0; }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<h1>Welcome to Expense Tracker!</h1>
+		</div>
+		<div class="content">
+			<div class="welcome-message">
+				<h2>Hi {{.Name}},</h2>
+				<p>Thank you for registering with Expense Tracker! We're excited to help you manage your expenses efficiently.</p>
+			</div>
+			
+			<div class="features">
+				<h3>What you can do:</h3>
+				<div class="feature-item">✓ Track your expenses by category</div>
+				<div class="feature-item">✓ Upload and manage receipts</div>
+				<div class="feature-item">✓ Link receipts to expenses</div>
+				<div class="feature-item">✓ Get expense summaries and insights</div>
+			</div>
+			
+			<p style="text-align: center;">
+				<a href="#" class="button">Get Started</a>
+			</p>
+			
+			<p>If you have any questions, feel free to reach out to our support team.</p>
+		</div>
+		<div class="footer">
+			<p>This is an automated notification from Expense Tracker.</p>
+			<p>You're receiving this because you just registered an account.</p>
+		</div>
+	</div>
+</body>
+</html>

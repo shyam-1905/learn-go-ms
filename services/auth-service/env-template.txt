@@ -1,0 +1,17 @@
+# Environment Variables Template
+# Copy these to your terminal or use the set-env scripts
+
+# Database Configuration (AWS RDS)
+DB_HOST=test-db.c8bs0qiu4gv4.us-east-1.rds.amazonaws.com
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=Adminpass123
+DB_NAME=auth_db
+
+# JWT Configuration
+# Generate a strong secret: openssl rand -base64 32
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_EXPIRATION_HOURS=24
+
+# Server Configuration
+SERVER_PORT=8080
